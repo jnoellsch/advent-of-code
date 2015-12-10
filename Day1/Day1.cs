@@ -12,11 +12,11 @@
         object IPuzzle.Answer()
         {
             string floorMovement = File.ReadAllText("Day1/input.txt");
+            
+            var tracker = new ApartmentTracker();
+            tracker.RunRoute(floorMovement.ToCharArray());
 
-            int up = floorMovement.Count(x => x.Equals('('));
-            int down = floorMovement.Count(x => x.Equals(')'));
-
-            return up - down;
+            return tracker.Floor;
         }
 
         object IPuzzlePart2.Answer()
@@ -43,6 +43,11 @@
             public int Floor { get; private set; }
 
             public int ElevatorVisits { get; private set; }
+
+            public void RunRoute(char[] allDirections)
+            {
+                allDirections.ToList().ForEach(this.Move);
+            }
 
             public void Move(char direction)
             {
