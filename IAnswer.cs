@@ -2,6 +2,6 @@
 {
     public interface IDay
     {
-        string Answer();
+        object Answer();
     }
 }

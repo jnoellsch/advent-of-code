@@ -4,11 +4,12 @@
     using System.Linq;
 
     /// <summary>
+    /// Calculates the building floor traversal of Santa by going up ( '(' ) or down ( ')' ).
     /// http://adventofcode.com/day/1
     /// </summary>
     public class Day1 : IDay
     {
-        public string Answer()
+        public object Answer()
         {
             string input = File.ReadAllText("Day1/input.txt");
             
