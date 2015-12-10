@@ -10,7 +10,7 @@
     /// Calculates the total wrapping paper needs for elfs by summing all sides and some slack.
     /// http://adventofcode.com/day/2
     /// </summary>
-    public class Day2 : IDay
+    public class Day2 : IPuzzle
     {
         public object Answer()
         {

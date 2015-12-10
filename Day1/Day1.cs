@@ -7,7 +7,7 @@
     /// Calculates the building floor traversal of Santa by going up ( '(' ) or down ( ')' ).
     /// http://adventofcode.com/day/1
     /// </summary>
-    public class Day1 : IDay
+    public class Day1 : IPuzzle
     {
         public object Answer()
         {

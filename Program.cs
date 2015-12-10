@@ -8,7 +8,7 @@
         {
             ////IDay day = new Day1();
             ////IDay day = new Day2();
-            IDay day = new Day3();
+            IPuzzle day = new Day3();
 
             Console.WriteLine(day.Answer());
             Console.ReadKey();

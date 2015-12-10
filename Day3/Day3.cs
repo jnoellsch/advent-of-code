@@ -8,7 +8,7 @@
     /// Plots the directions and delivery of presents to various houses. Determines the number of houses with 1 or more presents.
     /// http://adventofcode.com/day/3
     /// </summary>
-    public class Day3 : IDay
+    public class Day3 : IPuzzle
     {
         public object Answer()
         {

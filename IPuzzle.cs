@@ -1,6 +1,6 @@
 ﻿namespace AoC
 {
-    public interface IDay
+    public interface IPuzzle
     {
         object Answer();
     }
