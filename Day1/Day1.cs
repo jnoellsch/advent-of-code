@@ -13,10 +13,10 @@
         {
             string input = File.ReadAllText("Day1/input.txt");
             
-            int upFloors = input.Count(x => x.Equals('('));
-            int downFloors = input.Count(x => x.Equals(')'));
+            int up = input.Count(x => x.Equals('('));
+            int down = input.Count(x => x.Equals(')'));
 
-            return (upFloors - downFloors).ToString();
+            return up - down;
         }
     }
 }
