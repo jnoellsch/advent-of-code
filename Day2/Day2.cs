@@ -10,12 +10,18 @@
     /// Calculates the total wrapping paper needs for elfs by summing all sides and some slack.
     /// http://adventofcode.com/day/2
     /// </summary>
-    public class Day2 : IPuzzle
+    public class Day2 : IPuzzle, IPuzzlePart2
     {
-        public object Answer()
+        object IPuzzle.Answer()
         {
             var boxes = ParseBoxes();
-            return boxes.Sum(b => b.CalculateElfSurfaceArea());
+            return boxes.Sum(b => b.CalculatePaper());
+        }
+
+        object IPuzzlePart2.Answer()
+        {
+            var boxes = ParseBoxes();
+            return boxes.Sum(b => b.CalculateRibbon());
         }
 
         private static List<Box> ParseBoxes()
@@ -95,11 +101,31 @@
             }
 
             /// <summary>
-            /// Calculates the stanard surface area, including slack.
+            /// Calculates the cubic feet.
             /// </summary>
-            public int CalculateElfSurfaceArea()
+            public int CalculateCubicFeet()
+            {
+                return this.Length * this.Height * this.Width;
+            }
+
+            /// <summary>
+            /// Calculates the paper needs by using surface area and some slack on the small side.
+            /// </summary>
+            public int CalculatePaper()
             {
                 return this.CalculateSurfaceArea() + this.Slack;
+            }
+
+            /// <summary>
+            /// Calculates the ribbon needs by wrapping the short sides and a bow that equals the cubic feet.
+            /// </summary>
+            /// <returns></returns>
+            public int CalculateRibbon()
+            {
+                int wrap = new List<int>() { this.Length, this.Width, this.Height }.OrderBy(x => x).Take(2).Sum(x => x * 2);
+                int bow = this.CalculateCubicFeet();
+
+                return wrap + bow;
             }
         }
     }
