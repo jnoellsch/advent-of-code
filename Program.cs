@@ -6,12 +6,14 @@
     {
         public static void Main(string[] args)
         {
-            ////IPuzzle day = new Day1();
-            ////IPuzzle day = new Day2();
-            ////IPuzzle day = new Day3();
-            IPuzzle day = new Day4();
+            IPuzzle part1 = new Day1();
+            IPuzzlePart2 part2 = new Day1();
+            ////IPuzzle part1 = new Day2();
+            ////IPuzzle part1 = new Day3();
+            ////IPuzzle part1 = new Day4();
 
-            Console.WriteLine(day.Answer());
+            Console.WriteLine("Part 1: " + part1.Answer());
+            Console.WriteLine("Part 2: " + part2.Answer());
             Console.ReadKey();
         }
     }

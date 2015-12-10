@@ -46,6 +46,7 @@
     <Compile Include="Day3\Day3.cs" />
     <Compile Include="Day4\Day4.cs" />
     <Compile Include="IPuzzle.cs" />
+    <Compile Include="IPuzzlePart2.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
