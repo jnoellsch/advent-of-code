@@ -19,7 +19,7 @@
             foreach (char nextStop in elfDirections)
             {
                 plotter.Move(nextStop);
-                giftTracker.Record(plotter.CoordinateKey);
+                giftTracker.Deliver(plotter.CoordinateKey);
             }
 
             return giftTracker.LuckyHouses();
@@ -33,19 +33,19 @@
             var roboSantaPlotter = new HousePlotter();
 
             // gift the starting house
-            giftTracker.Record(santaPlotter.CoordinateKey);
+            giftTracker.Deliver(santaPlotter.CoordinateKey);
 
             // follow directions for santa and robo santa
             foreach (char nextStop in elfDirections.SantaOnly())
             {
                 santaPlotter.Move(nextStop);
-                giftTracker.Record(santaPlotter.CoordinateKey);
+                giftTracker.Deliver(santaPlotter.CoordinateKey);
             }
 
             foreach (char nextStop in elfDirections.RoboSantaOnly())
             {
                 roboSantaPlotter.Move(nextStop);
-                giftTracker.Record(roboSantaPlotter.CoordinateKey);
+                giftTracker.Deliver(roboSantaPlotter.CoordinateKey);
             }
 
             return giftTracker.LuckyHouses();
@@ -55,7 +55,7 @@
         {
             private IDictionary<object, int> _giftTracker = new Dictionary<object, int>();
 
-            public void Record(object house)
+            public void Deliver(object house)
             {
                 if (this._giftTracker.ContainsKey(house))
                 {
