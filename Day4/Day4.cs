@@ -7,12 +7,25 @@
     /// Finds the lowest coin number that has a hash that starts with five zeros.
     /// http://adventofcode.com/day/4
     /// </summary>
-    public class Day4 : IPuzzle
+    public class Day4 : IPuzzle, IPuzzlePart2
     {
-        public object Answer()
+        const string InputKey = "ckczppom";
+
+        object IPuzzle.Answer()
         {
-            string secretKey = "ckczppom";
-            var miner = new CoinMiner(secretKey);
+            var miner = new CoinMiner(InputKey);
+
+            while (!miner.IsIdealCoin())
+            {
+                miner.Dig();
+            }
+
+            return miner.CoinNumber;
+        }
+
+        object IPuzzlePart2.Answer()
+        {
+            var miner = new CoinMiner(InputKey, "000000");
 
             while (!miner.IsIdealCoin())
             {
@@ -31,9 +44,17 @@
                 this.SecretKey = secretKey;
                 this.CoinNumber = 1;
                 this.Hash = string.Empty;
+                this.DesiredPrefix = "00000";
             }
 
-            public int CoinNumber { get; set; }
+            public CoinMiner(string secretKey, string desiredPrefix) : this(secretKey)
+            {
+                this.DesiredPrefix = desiredPrefix;
+            }
+
+            public string DesiredPrefix { get; private set; }
+
+            public int CoinNumber { get; private set; }
 
             public string SecretKey { get; private set; }
 
@@ -47,7 +68,7 @@
 
             public bool IsIdealCoin()
             {
-                return this.Hash.StartsWith("00000");
+                return this.Hash.StartsWith(this.DesiredPrefix);
             }
 
             private void NextCoin()
