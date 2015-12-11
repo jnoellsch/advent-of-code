@@ -3,7 +3,6 @@
     using System;
     using System.Drawing;
     using System.IO;
-    using System.Linq;
 
     public class Day6 : IPuzzle, IPuzzlePart2
     {
@@ -23,15 +22,20 @@
 
         object IPuzzlePart2.Answer()
         {
-            return string.Empty;
+            string[] instructions = File.ReadAllLines("Day6/input.txt");
+            var grizwolds = new DimmableLightGrid(1000);
+
+            foreach (var instr in instructions)
+            {
+                grizwolds.FlipLights(LightCommand.Parse(instr));
+            }
+
+            return grizwolds.NeighborAnnonyanceLevel();
         }
 
         public class LightGrid
         {
-            private const int OnFlag = 1;
-            private const int OffFlag = 0;
-
-            private int[,] _grid;
+            protected int[,] Grid;
 
             public LightGrid(int size)
             {
@@ -42,7 +46,7 @@
 
             private void StapleToHouse()
             {
-                this._grid = new int[this.Size, this.Size];
+                this.Grid = new int[this.Size, this.Size];
             }
 
             public int Size { get; private set; }
@@ -52,35 +56,35 @@
                 this.Off(new Point(0, 0), new Point(this.Size - 1, this.Size - 1));    
             }
 
-            public void On(Point start, Point end)
+            public virtual void On(Point start, Point end)
             {
                 for (int i = start.X; i <= end.X; i++)
                 {
                     for (int j = start.Y; j <= end.Y; j++)
                     {
-                        this._grid[i,j] = OnFlag;
+                        this.Grid[i,j] = 1;
                     }
                 }    
             }
 
-            public void Off(Point start, Point end)
+            public virtual void Off(Point start, Point end)
             {
                 for (int i = start.X; i <= end.X; i++)
                 {
                     for (int j = start.Y; j <= end.Y; j++)
                     {
-                        this._grid[i,j] = OffFlag;
+                        this.Grid[i,j] = 0;
                     }
                 }        
             }
 
-            public void Toggle(Point start, Point end)
+            public virtual void Toggle(Point start, Point end)
             {
                 for (int i = start.X; i <= end.X; i++)
                 {
                     for (int j = start.Y; j <= end.Y; j++)
                     {
-                        this._grid[i,j] = this._grid[i,j] == OnFlag ? OffFlag : OnFlag;
+                        this.Grid[i,j] = this.Grid[i,j] == 1 ? 0 : 1;
                     }
                 }    
             }
@@ -93,7 +97,7 @@
                 {
                     for (int j = 0; j < this.Size; j++)
                     {
-                        sum += this._grid[i, j];
+                        sum += this.Grid[i, j];
                     }
                 }
 
@@ -103,6 +107,47 @@
             public void FlipLights(LightCommand command)
             {
                 command.Run(this);
+            }
+        }
+
+        public class DimmableLightGrid : LightGrid
+        {
+            public DimmableLightGrid(int size)
+                : base(size)
+            {
+            }
+
+            public override void On(Point start, Point end)
+            {
+                for (int i = start.X; i <= end.X; i++)
+                {
+                    for (int j = start.Y; j <= end.Y; j++)
+                    {
+                        this.Grid[i, j]++;
+                    }
+                }    
+            }
+
+            public override void Off(Point start, Point end)
+            {
+                for (int i = start.X; i <= end.X; i++)
+                {
+                    for (int j = start.Y; j <= end.Y; j++)
+                    {
+                        this.Grid[i, j] = Math.Max(this.Grid[i, j] - 1, 0);
+                    }
+                }  
+            }
+
+            public override void Toggle(Point start, Point end)
+            {
+                for (int i = start.X; i <= end.X; i++)
+                {
+                    for (int j = start.Y; j <= end.Y; j++)
+                    {
+                        this.Grid[i, j] = this.Grid[i, j] + 2;
+                    }
+                }  
             }
         }
 
