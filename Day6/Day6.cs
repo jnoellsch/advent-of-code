@@ -10,14 +10,14 @@
         object IPuzzle.Answer()
         {
             string[] instructions = File.ReadAllLines("Day6/input.txt");
-            var grizwalds = new LightGrid(1000);
+            var grizwolds = new LightGrid(1000);
 
             foreach (var instr in instructions)
             {
-                grizwalds.FlipLights(LightCommand.Parse(instr));
+                grizwolds.FlipLights(LightCommand.Parse(instr));
             }
 
-            return grizwalds.NeighborAnnonyanceLevel();
+            return grizwolds.NeighborAnnonyanceLevel();
         }
 
 
@@ -132,7 +132,7 @@
                 switch (this.Mode)
                 {
                     case OffMode:
-                        grid.On(this.Start, this.End);
+                        grid.Off(this.Start, this.End);
                         break;
                     case OnMode:
                         grid.On(this.Start, this.End);
