@@ -36,10 +36,21 @@
             public LightGrid(int size)
             {
                 this.Size = size;
-                this._grid = new int[size, size];
+                this.StapleToHouse();
+                this.ConservePower();
+            }
+
+            private void StapleToHouse()
+            {
+                this._grid = new int[this.Size, this.Size];
             }
 
             public int Size { get; private set; }
+
+            public void ConservePower()
+            {
+                this.Off(new Point(0, 0), new Point(this.Size - 1, this.Size - 1));    
+            }
 
             public void On(Point start, Point end)
             {
@@ -78,9 +89,9 @@
             {
                 int sum = 0;
 
-                for (int i = 0; i < this.Size - 1; i++)
+                for (int i = 0; i < this.Size; i++)
                 {
-                    for (int j = 0; j < this.Size - 1; j++)
+                    for (int j = 0; j < this.Size; j++)
                     {
                         sum += this._grid[i, j];
                     }
