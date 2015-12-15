@@ -48,6 +48,7 @@
     <Compile Include="Day4\Day4.cs" />
     <Compile Include="Day5\Day5.cs" />
     <Compile Include="Day6\Day6.cs" />
+    <Compile Include="Day7\Day7.cs" />
     <Compile Include="IPuzzle.cs" />
     <Compile Include="IPuzzlePart2.cs" />
     <Compile Include="Program.cs" />
@@ -72,8 +73,13 @@
     <Content Include="Day6\input.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Day7\input.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Day8\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
