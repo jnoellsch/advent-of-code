@@ -1,5 +1,6 @@
 ﻿namespace AoC
 {
+    using System.Diagnostics;
     using System.IO;
     using System.Text.RegularExpressions;
 
@@ -20,7 +21,15 @@
 
         object IPuzzlePart2.Answer()
         {
-            return string.Empty;
+            string[] codeLines = File.ReadAllLines("Day8/input.txt");
+            var codeCounter = new FunkyCodeCounter();
+
+            foreach (var line in codeLines)
+            {
+                codeCounter.Count(line);
+            }
+
+            return codeCounter.MemoryVsCodeChars;
         }
 
         public class CodeCounter
@@ -43,6 +52,14 @@
                 }
             }
 
+            public int MemoryVsCodeChars
+            {
+                get
+                {
+                    return this.MemoryChars - this.CodeChars;
+                }
+            }
+
             public void Count(string codeLine)
             {
                 this.IncreaseCode(codeLine.Length);
@@ -52,14 +69,16 @@
             private void IncreaseMemory(int amountToAdd)
             {
                 this.MemoryChars += amountToAdd;
+                Debug.WriteLine("Memory:{0}", amountToAdd);
             }
 
             private void IncreaseCode(int amountToAdd)
             {
                 this.CodeChars += amountToAdd;
+                Debug.WriteLine("Code:{0}", amountToAdd);
             }
 
-            private string EncodeAsMemory(string codeLine)
+            protected virtual string EncodeAsMemory(string codeLine)
             {
                 // normalize/kill code ends
                 codeLine = codeLine.TrimEnd('"').TrimStart('"'); 
@@ -67,6 +86,18 @@
                 // replace escape sequences
                 Regex regex = new Regex(@"\\x[a-f0-9][a-f0-9]|\\{2}|\\"""); 
                 return regex.Replace(codeLine, "_");
+            }
+        }
+
+        public class FunkyCodeCounter : CodeCounter
+        {
+            protected override string EncodeAsMemory(string codeLine)
+            {
+                // double up on "/" and """, then "fake" the ends
+                Regex regexEscape = new Regex(@"""|\\");
+                string result = "_" + regexEscape.Replace(codeLine, "__") + "_";
+
+                return result;
             }
         }
     }
