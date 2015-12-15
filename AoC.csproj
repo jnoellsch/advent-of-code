@@ -52,6 +52,7 @@
     <Compile Include="Day8\Day8.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Day9\Day9.cs" />
     <Compile Include="IPuzzle.cs" />
     <Compile Include="IPuzzlePart2.cs" />
     <Compile Include="Program.cs" />
