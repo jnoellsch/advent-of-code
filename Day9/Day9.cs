@@ -7,7 +7,7 @@
         object IPuzzle.Answer()
         {
             var lookAndSay = new LookAndSay("1321131112");
-            lookAndSay.Go(2);
+            lookAndSay.Go(5);
             return lookAndSay.Result;
         }
 
@@ -19,13 +19,13 @@
 
     public class LookAndSay
     {
-        public LookAndSay(string start)
+        public LookAndSay(string first)
         {
-            this.Start = start;
-            this.Result = start;
+            this.First = first;
+            this.Result = first;
         }
 
-        public string Start { get; private set; }
+        public string First { get; private set; }
 
         public string Result { get; private set; }
 
@@ -33,7 +33,8 @@
         {
             for (int i = 0; i < times; i++)
             {
-                this.Result = this.DoIt(this.Result, string.Empty);
+                string result = this.DoIt(this.Result, string.Empty);
+                this.Result = result;
             }
         }
 
@@ -41,7 +42,7 @@
         {
             if (input.Length == 1)
             {
-                return String.Concat(1, input);
+                return string.Concat(1, input);
             }
 
             string peek = input[0].ToString();
