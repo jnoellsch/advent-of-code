@@ -62,12 +62,14 @@
             private static readonly int[] RightBoundaries = { 3, 6, 9 };
             private static readonly int[] DownBoundaries = { 7, 8, 9 };
 
-            public object Key { get; private set; } = 5;
+            public virtual object Key { get; private set; } = 5;
 
             public char RequestedMove { get; private set; }
 
             public object Crack(char[] fingerPath)
             {
+                this.Reset();
+
                 foreach (char move in fingerPath)
                 {
                     this.RequestedMove = move;
@@ -90,6 +92,11 @@
                 }
 
                 return this.Key;
+            }
+
+            protected virtual void Reset()
+            {
+                this.Key = 5;
             }
 
             protected virtual void MoveRight()
@@ -151,7 +158,7 @@
 
             public object[,] Keypad { get; } = new object[5, 5];
 
-            public new object Key => this.Keypad[this.X, this.Y];
+            public override object Key => this.Keypad[this.X, this.Y];
 
             protected override void MoveDown()
             {
@@ -171,6 +178,13 @@
             protected override void MoveUp()
             {
                 if (this.CanExecute(0, -1)) this.Y -= 1;
+            }
+
+            protected override void Reset()
+            {
+                base.Reset();
+                this.X = 0;
+                this.Y = 2;
             }
 
             private bool CanExecute(int xMove, int yMove)
