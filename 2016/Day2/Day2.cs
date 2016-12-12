@@ -3,6 +3,10 @@
     using System.IO;
     using System.Linq;
 
+    /// <summary>
+    /// Determines the door code for the bathroom based on movement instructions.
+    /// http://adventofcode.com/2016/day/2
+    /// </summary>
     public class Day2 : IPuzzle
     {
         public object Answer()
