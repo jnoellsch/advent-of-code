@@ -10,21 +10,28 @@
     /// Calculates the number of blocks away by using the taxi cab geometry. Instructions execute turns and travel distance. 
     /// http://adventofcode.com/2016/day/1
     /// </summary>
-    public class Day1 : IPuzzle
+    public class Day1 : IPuzzle, IPuzzlePart2
     {
-        public object Answer()
+        object IPuzzle.Answer()
         {
             var elfNav = new ElfNavigator();
             elfNav.LoadInstructionsIntoGps(File.ReadAllText("Day1/input.txt"));
             return elfNav.BlocksAway;
         }
 
+        object IPuzzlePart2.Answer()
+        {
+            var elfNav = new ElfIntersectionNavigator();
+            elfNav.LoadInstructionsIntoGps(File.ReadAllText("Day1/input.txt"));
+            return elfNav.BlocksAway;
+        }
+
         public class ElfNavigator
         {
-            private const int N = 0;
-            private const int S = 180;
-            private const int E = 90;
-            private const int W = 270;
+            protected const int N = 0;
+            protected const int S = 180;
+            protected const int E = 90;
+            protected const int W = 270;
 
             private int _angle;
 
@@ -35,7 +42,7 @@
             }
             private IDictionary<int, int> MoveData { get; }
 
-            public int BlocksAway
+            public virtual int BlocksAway
             {
                 get
                 {
@@ -62,7 +69,7 @@
                 }
             }
 
-            public void LoadInstructionsIntoGps(string directions)
+            public virtual void LoadInstructionsIntoGps(string directions)
             {
                 foreach (string move in directions.Split(',').Select(x => x.Trim()))
                 {
@@ -77,19 +84,87 @@
                 }
             }
 
-            private void Move(int dist)
+            protected virtual void Move(int dist)
             {
                 this.MoveData[this.Angle] += dist;
             }
 
-            private void TurnRight()
+            protected virtual void TurnRight()
             {
                 this.Angle += 90;
             }
 
-            private void TurnLeft()
+            protected virtual void TurnLeft()
             {
                 this.Angle -= 90;
+            }
+        }
+
+        public class ElfIntersectionNavigator : ElfNavigator
+        {
+            public override int BlocksAway
+            {
+                get
+                {
+                    int taxiCabMetric = Math.Abs(this.X - 250) + Math.Abs(this.Y - 250);
+                    return taxiCabMetric;
+                }
+            }
+
+            public bool IntersectionFound { get; private set; } = false;
+
+            private int[,] MoveIntersections { get; } = new int[500, 500];
+
+            private int X { get; set; } = 250;
+
+            private int Y { get; set; } = 250;
+
+            public override void LoadInstructionsIntoGps(string directions)
+            {
+                foreach (string move in directions.Split(',').Select(x => x.Trim()))
+                {
+                    // extract move details
+                    string turn = move.Substring(0, 1);
+                    int dist = Convert.ToInt32(move.Substring(1, move.Length - 1));
+
+                    // turn and hoof it
+                    if (turn == "L") { this.TurnLeft(); }
+                    else if (turn == "R") { this.TurnRight(); }
+                    this.Move(dist);
+                    
+                    // track 
+                    for (int i = 0; i < dist; i++)
+                    {
+                        // move ordinal direction based on angle
+                        switch (this.Angle)
+                        {
+                            case N:
+                                this.MoveAndTrack(0, -1);
+                                break;
+                            case S:
+                                this.MoveAndTrack(0, 1);
+                                break;
+                            case E:
+                                this.MoveAndTrack(1, 0);
+                                break;
+                            case W:
+                                this.MoveAndTrack(-1, 0);
+                                break;
+                        }
+
+                        // abort once we've found HQ
+                        if (this.IntersectionFound)
+                        {
+                            return;
+                        }
+                    }
+                }
+            }
+
+            private void MoveAndTrack(int xMove, int yMove)
+            {
+                this.IntersectionFound = this.MoveIntersections[this.X += xMove, this.Y += yMove] == 1;
+                this.MoveIntersections[this.X, this.Y] = 1;
             }
         }
     }
