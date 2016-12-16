@@ -9,18 +9,18 @@
         object IPuzzle.Answer()
         {
             var dejammer = new SantaMessageDejammer();
-            return dejammer.UnJam(File.ReadAllLines("Day6/input.txt"), new MostFrequentLetterDejammingStrategy());
+            return dejammer.UnJam(File.ReadAllLines("Day6/input.txt"), new MostFrequentLetter());
         }
 
         object IPuzzlePart2.Answer()
         {
             var dejammer = new SantaMessageDejammer();
-            return dejammer.UnJam(File.ReadAllLines("Day6/input.txt"), new LeastFrequentLetterDejammingStrategy());
+            return dejammer.UnJam(File.ReadAllLines("Day6/input.txt"), new LeastFrequentLetter());
         }
 
         public class SantaMessageDejammer
         {
-            public string UnJam(string[] msgRows, IDejamingStrategy strategy)
+            public string UnJam(string[] msgRows, IDejammingStrategy strategy)
             {
                 var msgCols = msgRows.Transpose().ToList();
                 string realMsg = string.Empty;
@@ -34,17 +34,17 @@
             }
         }
 
-        public interface IDejamingStrategy
+        public interface IDejammingStrategy
         {
             char Run(IEnumerable<char> src);
         }
 
-        public class MostFrequentLetterDejammingStrategy : IDejamingStrategy
+        public class MostFrequentLetter : IDejammingStrategy
         {
             public char Run(IEnumerable<char> src) => src.GroupBy(x => x).Select(x => new { Letter = x.Key, Count = x.Count() }).OrderByDescending(x => x.Count).First().Letter;
         }
 
-        public class LeastFrequentLetterDejammingStrategy : IDejamingStrategy
+        public class LeastFrequentLetter : IDejammingStrategy
         {
             public char Run(IEnumerable<char> src) => src.GroupBy(x => x).Select(x => new { Letter = x.Key, Count = x.Count() }).OrderBy(x => x.Count).First().Letter;
         }
