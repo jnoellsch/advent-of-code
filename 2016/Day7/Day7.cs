@@ -7,35 +7,42 @@
     using System.Linq;
     using System.Text.RegularExpressions;
 
-    public class Day7 : IPuzzle
+    public class Day7 : IPuzzle, IPuzzlePart2
     {
         object IPuzzle.Answer()
         {
             var finder = new EbhqIpAddressSniffer();
-            finder.LoadData(File.ReadAllLines("Day7/input.txt"));
-            return finder.SupportTls.Count;
+            finder.Sniff(File.ReadAllLines("Day7/input.txt"));
+            return finder.Hits.Count;
+        }
+
+        object IPuzzlePart2.Answer()
+        {
+            var finder = new EbhqIpAddressSniffer();
+            finder.Sniff(File.ReadAllLines("Day7/input.txt"));
+            return -1;
         }
 
         private class EbhqIpAddressSniffer
         {
-            public IList<IpLine> SupportTls { get; set; } = new List<IpLine>();
+            public IList<TlsIpLine> Hits { get; } = new List<TlsIpLine>();
 
-            public void LoadData(string[] ipLines)
+            public void Sniff(string[] ipLines)
             {
                 foreach (var line in ipLines)
                 {
-                    var ipLine = IpLine.Parse(line);
-                    if (ipLine.SupportsTls)
+                    var ipLine = TlsIpLine.Parse(line);
+                    if (ipLine.SupportsProtocol)
                     {
-                        this.SupportTls.Add(ipLine);
+                        this.Hits.Add(ipLine);
                     }
                 }
             }
         }
 
-        public class IpLine
+        public class TlsIpLine
         {
-            private IpLine()
+            private TlsIpLine()
             {
             }
 
@@ -43,14 +50,14 @@
 
             public IList<string> Hypernets { get; private set; }
 
-            public bool SupportsTls => this.AbbaInOthers() && this.NoAbbaInHypernets();
+            public virtual bool SupportsProtocol => this.AbbaInOthers() && this.NoAbbaInHypernets();
 
-            public static IpLine Parse(string line)
+            public static TlsIpLine Parse(string line)
             {
                 var regexHypernets = new Regex(@"\[(\w*?)\]");
                 var hypernets = (from Match h in regexHypernets.Matches(line) select h.Value.Replace("[", "").Replace("]", "")).ToList();
 
-                return new IpLine()
+                return new TlsIpLine()
                 {
                     Hypernets = hypernets,
                     Others = regexHypernets.Replace(line, "-").Split('-')

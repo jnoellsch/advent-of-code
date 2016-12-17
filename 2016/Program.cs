@@ -19,10 +19,10 @@
             ////IPuzzle part1 = new Day6();
             ////IPuzzlePart2 part2 = new Day6();
             IPuzzle part1 = new Day7();
-            ////IPuzzlePart2 part2 = new Day7();
+            IPuzzlePart2 part2 = new Day7();
 
             Console.WriteLine("Part 1: " + part1.Answer());
-            ////Console.WriteLine("Part 2: " + part2.Answer());
+            Console.WriteLine("Part 2: " + part2.Answer());
             Console.ReadKey();
         }
     }
