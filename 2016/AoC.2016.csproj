@@ -19,7 +19,8 @@
     <Content Include="Day4\input.txt" />
     <Content Include="Day6\input.txt" />
     <Content Include="Day7\input.txt" />
-    <Content Include="Day7\sample.txt" />
+    <Content Include="Day7\sample1.txt" />
+    <Content Include="Day7\sample2.txt" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.App">

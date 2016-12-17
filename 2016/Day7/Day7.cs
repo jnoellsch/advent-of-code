@@ -11,27 +11,29 @@
     {
         object IPuzzle.Answer()
         {
-            var finder = new EbhqIpAddressSniffer();
+            var finder = new EbhqIpAddressSniffer<TlsIpLine>();
             finder.Sniff(File.ReadAllLines("Day7/input.txt"));
             return finder.Hits.Count;
         }
 
         object IPuzzlePart2.Answer()
         {
-            var finder = new EbhqIpAddressSniffer();
+            var finder = new EbhqIpAddressSniffer<SslIpLine>();
             finder.Sniff(File.ReadAllLines("Day7/input.txt"));
-            return -1;
+            return finder.Hits.Count;
         }
 
-        private class EbhqIpAddressSniffer
+        private class EbhqIpAddressSniffer<T> where T : IpLine, new()
         {
-            public IList<TlsIpLine> Hits { get; } = new List<TlsIpLine>();
+            public IList<T> Hits { get; } = new List<T>();
 
             public void Sniff(string[] ipLines)
             {
                 foreach (var line in ipLines)
                 {
-                    var ipLine = TlsIpLine.Parse(line);
+                    var ipLine = new T();
+                    ipLine.Parse(line);
+
                     if (ipLine.SupportsProtocol)
                     {
                         this.Hits.Add(ipLine);
@@ -40,33 +42,81 @@
             }
         }
 
-        public class TlsIpLine
+        public class SslIpLine : IpLine
         {
-            private TlsIpLine()
+            public override bool SupportsProtocol => this.AbaBabChecker();
+
+            private IList<char[]> SupernetAbas { get; } = new List<char[]>();
+
+            private bool AbaBabChecker()
             {
-            }
-
-            public IList<string> Others { get; private set; }
-
-            public IList<string> Hypernets { get; private set; }
-
-            public virtual bool SupportsProtocol => this.AbbaInOthers() && this.NoAbbaInHypernets();
-
-            public static TlsIpLine Parse(string line)
-            {
-                var regexHypernets = new Regex(@"\[(\w*?)\]");
-                var hypernets = (from Match h in regexHypernets.Matches(line) select h.Value.Replace("[", "").Replace("]", "")).ToList();
-
-                return new TlsIpLine()
+                // find all ABA sequences in supernets
+                foreach (string h in this.Supernets)
                 {
-                    Hypernets = hypernets,
-                    Others = regexHypernets.Replace(line, "-").Split('-')
-                };
+                    int i = 0;
+                    while (i < h.Length - 2)
+                    {
+                        var chunk = h.Skip(i).Take(3).ToArray();
+                        if (this.IsAba(chunk))
+                        {
+                            this.SupernetAbas.Add(chunk);
+                        }
+
+                        i++;
+                    }
+                }
+
+                // convert them all to BAB sequences
+                var babCandiates = this.SupernetAbas.Select(x => new string(this.AbaToBab(x))).ToList();
+
+                // match BAB sequences in hypernets 
+                foreach (string h in this.Hypernets)
+                {
+                    int i = 0;
+                    while (i < h.Length - 2)
+                    {
+                        var chunk = h.Skip(i).Take(3).ToArray();
+                        if (this.IsBabMatch(chunk, babCandiates))
+                        {
+                            return true;
+                        }
+
+                        i++;
+                    }
+                }
+                // nothing found (i.e. no ABA in supernets match BAB in hypernets)
+                return false;
             }
 
-            public bool NoAbbaInHypernets() => !this.AbbaChecker(this.Hypernets);
+            private bool IsBabMatch(char[] chunk, IEnumerable<string> candiates)
+            {
+                if (chunk.Length != 3) throw new ArgumentOutOfRangeException(nameof(chunk), "Array is not 3 characters.");
+                
+                return candiates.Any(x => x.Equals(new string(chunk)));
+            }
 
-            public bool AbbaInOthers() => this.AbbaChecker(this.Others);
+            private bool IsAba(char[] chunk)
+            {
+                if (chunk.Length != 3) throw new ArgumentOutOfRangeException(nameof(chunk), "Array is not 3 characters.");
+
+                return chunk[0] == chunk[2] && chunk[0] != chunk[1];
+            }
+
+            private char[] AbaToBab(char[] chunk)
+            {
+                if (chunk.Length != 3) throw new ArgumentOutOfRangeException(nameof(chunk), "Array is not 3 characters.");
+
+                return new[] { chunk[1], chunk[0], chunk[1] };
+            }
+        }
+
+        public class TlsIpLine : IpLine
+        {
+            public override bool SupportsProtocol => this.AbbaInSupernets() && this.NoAbbaInHypernets();
+
+            private bool NoAbbaInHypernets() => !this.AbbaChecker(this.Hypernets);
+
+            private bool AbbaInSupernets() => this.AbbaChecker(this.Supernets);
 
             private bool AbbaChecker(IList<string> stringChunks)
             {
@@ -96,6 +146,24 @@
                 bool interiorCharsDiff = chunk[0] != chunk[1];
 
                 return fulfillsPattern && interiorCharsDiff;
+            }
+        }
+
+        public abstract class IpLine
+        {
+            public IList<string> Supernets { get; private set; }
+
+            public IList<string> Hypernets { get; private set; }
+
+            public abstract bool SupportsProtocol { get; }
+
+            public void Parse(string line)
+            {
+                var regexHypernets = new Regex(@"\[(\w*?)\]");
+                var hypernets = (from Match h in regexHypernets.Matches(line) select h.Value.Replace("[", "").Replace("]", "")).ToList();
+
+                this.Hypernets = hypernets;
+                this.Supernets = regexHypernets.Replace(line, "-").Split('-');
             }
         }
     }
