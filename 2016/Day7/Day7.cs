@@ -1,12 +1,15 @@
 ﻿namespace AoC
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
 
+    /// <summary>
+    /// Takes a set of "IP addresses" and determines if they are TLS or SSL based on various ABBA or ABA patterns.
+    /// http://adventofcode.com/2016/day/7
+    /// </summary>
     public class Day7 : IPuzzle, IPuzzlePart2
     {
         object IPuzzle.Answer()
@@ -23,7 +26,7 @@
             return finder.Hits.Count;
         }
 
-        private class EbhqIpAddressSniffer<T> where T : IpLine, new()
+        public class EbhqIpAddressSniffer<T> where T : IpLine, new()
         {
             public IList<T> Hits { get; } = new List<T>();
 

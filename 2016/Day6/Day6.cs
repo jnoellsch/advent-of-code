@@ -4,6 +4,10 @@
     using System.IO;
     using System.Linq;
 
+    /// <summary>
+    /// Unjams a message stream by finding the most common character or least common character in the columns of message rows.
+    /// http://adventofcode.com/2016/day/6
+    /// </summary>
     public class Day6 : IPuzzle, IPuzzlePart2
     {
         object IPuzzle.Answer()
