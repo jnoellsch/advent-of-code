@@ -2,6 +2,7 @@
 {
     using System.Security.Cryptography;
     using System.Text;
+    using AoC.Common;
 
     /// <summary>
     /// Finds the lowest coin number that has a hash that starts with five zeros.

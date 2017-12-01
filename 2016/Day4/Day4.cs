@@ -7,6 +7,7 @@
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
+    using AoC.Common;
 
     /// <summary>
     /// Decrypts a set of rooms and finds rooms by names.

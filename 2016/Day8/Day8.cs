@@ -2,23 +2,25 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
+    using AoC.Common;
 
     public class Day8 : IPuzzle
     {
         private const int ON = 1;
         private const int OFF = 0;
-        ////private const int ROW_SIZE = 50;
-        ////private const int COLUMN_SIZE = 6;
-        private const int ROW_DEPTH = 7;
-        private const int COLUMN_DEPTH = 3;
+        private const int ROW_DEPTH = 50;
+        private const int COLUMN_DEPTH = 6;
+        ////private const int ROW_DEPTH = 7;
+        ////private const int COLUMN_DEPTH = 3;
 
         object IPuzzle.Answer()
         {
-            var screen = new ScreenFixer();
-            screen.ReadInstructionsFromCard(File.ReadAllLines("Day8/sample.txt"));
+            var screen = new ScreenFixer { OutputVisuals = true };
+            screen.ReadInstructionsFromCard(File.ReadAllLines("Day8/input.txt"));
             screen.SwipeCard();
 
             return screen.LitPixels;
@@ -30,16 +32,23 @@
 
             public int[,] ScreenPixels { get; set; } = new int[COLUMN_DEPTH, ROW_DEPTH];
 
+            public bool OutputVisuals { get; set; } = true;
+
             public void ReadInstructionsFromCard(string[] instructions)
             {
                 var factory = new LightFlipperFactory();
 
                 foreach (var line in instructions)
                 {
+                    // flip pixels
                     var cmd = factory.Create(line);
                     cmd.Flip(this.ScreenPixels);
 
-                    this.DisplayLights();
+                    // optionally display
+                    if (this.OutputVisuals)
+                    {
+                        this.DisplayLights(line);
+                    }
                 }
             }
 
@@ -61,15 +70,28 @@
                 }
             }
 
-            private void DisplayLights()
+            private void DisplayLights(string line)
             {
-                for (int i = 0; i < COLUMN_DEPTH; i++)
-                {
-                    Console.Write("{0}: ", i);
+                // write command
+                Console.WriteLine(line);
+                Debug.WriteLine(line);
 
-                    for (int j = 0; j < ROW_DEPTH; j++)
+                // write x numbers
+                Console.Write("   ");
+                for (int x = 0; x < ROW_DEPTH; x++)
+                {
+                    Console.Write("{0,3}", x);
+                }
+                Console.WriteLine();
+
+                // write each y/x pixel
+                for (int y = 0; y < COLUMN_DEPTH; y++)
+                {
+                    Console.Write("{0}: ", y);
+
+                    for (int x = 0; x < ROW_DEPTH; x++)
                     {
-                        Console.Write("{0}", this.ScreenPixels[i, j] == ON ? "#" : ".");
+                        Console.Write("{0,3}", this.ScreenPixels[y, x] == ON ? "#" : ".");
                     }
 
                     Console.WriteLine();

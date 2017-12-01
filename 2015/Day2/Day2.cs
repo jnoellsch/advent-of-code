@@ -5,6 +5,7 @@
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
+    using AoC.Common;
 
     /// <summary>
     /// Calculates the total wrapping paper needs for elfs by summing all sides and some slack.

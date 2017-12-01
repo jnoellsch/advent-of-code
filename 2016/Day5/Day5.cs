@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
+    using AoC.Common;
 
     /// <summary>
     /// Finds the password for a door by MD5 hashing a door id and looking for patterns.

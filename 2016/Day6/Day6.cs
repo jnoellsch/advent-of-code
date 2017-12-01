@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using AoC.Common;
 
     /// <summary>
     /// Unjams a message stream by finding the most common character or least common character in the columns of message rows.

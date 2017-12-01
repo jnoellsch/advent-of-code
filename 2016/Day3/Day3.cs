@@ -6,6 +6,7 @@
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using AoC.Common;
 
     /// <summary>
     /// Validates the authenticity of triangle sizes on the wall.

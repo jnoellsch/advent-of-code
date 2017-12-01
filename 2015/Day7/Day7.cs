@@ -1,6 +1,7 @@
 ﻿namespace AoC.Day7
 {
     using System.IO;
+    using AoC.Common;
 
     public class Day7 : IPuzzle
     {

@@ -5,6 +5,7 @@
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
+    using AoC.Common;
 
     /// <summary>
     /// Takes a set of "IP addresses" and determines if they are TLS or SSL based on various ABBA or ABA patterns.

@@ -3,6 +3,7 @@
     using System.Diagnostics;
     using System.IO;
     using System.Text.RegularExpressions;
+    using AoC.Common;
 
     public class Day8 : IPuzzle, IPuzzlePart2
     {

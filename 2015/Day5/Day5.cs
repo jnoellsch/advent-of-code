@@ -5,6 +5,7 @@
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
+    using AoC.Common;
 
     public class Day5 : IPuzzle, IPuzzlePart2
     {

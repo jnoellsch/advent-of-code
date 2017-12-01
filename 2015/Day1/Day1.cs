@@ -2,6 +2,7 @@
 {
     using System.IO;
     using System.Linq;
+    using AoC.Common;
 
     /// <summary>
     /// Calculates the building floor traversal of Santa by going up ( '(' ) or down ( ')' ).

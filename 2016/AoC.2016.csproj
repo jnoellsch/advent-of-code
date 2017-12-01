@@ -34,6 +34,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\AoC.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="System.Drawing">
       <HintPath>..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Drawing.dll</HintPath>
     </Reference>

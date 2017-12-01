@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using AoC.Common;
 
     /// <summary>
     /// Plots the directions and delivery of presents to various houses. Determines the number of houses with 1 or more presents.

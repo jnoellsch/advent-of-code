@@ -4,6 +4,7 @@
     using System.Drawing;
     using System.IO;
     using System.Text.RegularExpressions;
+    using AoC.Common;
 
     public class Day6 : IPuzzle, IPuzzlePart2
     {

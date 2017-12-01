@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using System.Linq;
+    using AoC.Common;
 
     /// <summary>
     /// Determines the door code for the bathroom based on movement instructions.

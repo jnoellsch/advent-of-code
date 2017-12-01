@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using AoC.Common;
 
     /// <summary>
     /// Calculates the number of blocks away by using the taxi cab geometry. Instructions execute turns and travel distance. 
