@@ -26,6 +26,9 @@
             return captcha.DoorCode;
         }
 
+        /// <summary>
+        /// Finds the sum of all digits that match the next digit in the input.
+        /// </summary>
         public class CaptchaDoorCracker
         {
             public int DoorCode { get; private set; } = -1;
@@ -64,6 +67,9 @@
             }
         }
 
+        /// <summary>
+        /// find the sum of all digits that match the digit halfway around the circular list.
+        /// </summary>
         public class HalfsiesCaptchaDoorCracker : CaptchaDoorCracker
         {
             protected override int CalculatePeekIndex(int arraySize, int currentIndex)
