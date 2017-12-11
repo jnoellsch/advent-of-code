@@ -6,14 +6,22 @@
     using System.Linq;
     using AoC.Common;
 
-    public class Day1 : IPuzzle
+    public class Day1 : IPuzzle, IPuzzlePart2
     {
-        public object Answer()
-        {
-            var digits = File.ReadAllText("Day1/input.txt").Select(c => Int32.Parse(c.ToString())).ToArray();
+        public int[] Input { get; set; } = File.ReadAllText("Day1/input.txt").Select(c => Int32.Parse(c.ToString())).ToArray();
 
+        object IPuzzle.Answer()
+        {
             var captcha = new CaptchaDoorCracker();
-            captcha.Crack(digits);
+            captcha.Crack(this.Input);
+
+            return captcha.DoorCode;
+        }
+
+        object IPuzzlePart2.Answer()
+        {
+            var captcha = new HalfsiesCaptchaDoorCracker();
+            captcha.Crack(this.Input);
 
             return captcha.DoorCode;
         }
@@ -27,19 +35,12 @@
             public virtual void Crack(int[] digits)
             {
                 this.FindNumberPairs(digits);
-                this.SumNumberGroups();
+                this.SumNumberSets();
             }
 
-            protected virtual void SumNumberGroups()
+            protected virtual void SumNumberSets()
             {
-                int sum = 0;
-
-                foreach (var set in this.NumberSets)
-                {
-                    sum = sum + set;
-                }
-
-                this.DoorCode = sum;
+                this.DoorCode = this.NumberSets.Aggregate(0, (current, set) => current + set);
             }
 
             protected virtual void FindNumberPairs(int[] digits)
@@ -47,7 +48,7 @@
                 for (int i = 0; i < digits.Length; i++)
                 {
                     int candidate = digits[i];
-                    int peekIndex = i + 1 < digits.Length ? i + 1 : 0;
+                    int peekIndex = this.CalculatePeekIndex(digits.Length, i);
                     int peek = digits[peekIndex];
 
                     if (candidate == peek)
@@ -55,6 +56,25 @@
                         this.NumberSets.Add(candidate);
                     }
                 }
+            }
+
+            protected virtual int CalculatePeekIndex(int arraySize, int currentIndex)
+            {
+                return currentIndex + 1 < arraySize ? currentIndex + 1 : 0;
+            }
+        }
+
+        public class HalfsiesCaptchaDoorCracker : CaptchaDoorCracker
+        {
+            protected override int CalculatePeekIndex(int arraySize, int currentIndex)
+            {
+                int offset = arraySize / 2 + currentIndex;
+                if (offset >= arraySize)
+                {
+                    offset = Math.Abs(arraySize - offset);
+                }
+
+                return offset;
             }
         }
     }
