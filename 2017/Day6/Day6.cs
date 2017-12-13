@@ -6,7 +6,7 @@
     using System.Linq;
     using AoC.Common;
 
-    public class Day6 : IPuzzle
+    public class Day6 : IPuzzle, IPuzzlePart2
     {
         public int[] StartingMemory = File.ReadAllText("Day6/input.txt").Split('\t').Select(x => Convert.ToInt32(x)).ToArray();
 
@@ -18,6 +18,14 @@
             return manager.RedistributionCycles;
         }
 
+        object IPuzzlePart2.Answer()
+        {
+            var manager = new MemoryManager(this.StartingMemory);
+            manager.Reallocate();
+
+            return manager.LoopedStateDrift;
+        }
+
         public class MemoryManager
         {
             public MemoryManager(int[] memory)
@@ -26,6 +34,15 @@
             }
 
             public int RedistributionCycles => this.History.Count;
+
+            public int LoopedStateDrift
+            {
+                get
+                {
+                    var firstSighting = this.History.First(h => h.SequenceEqual(this.Memory));
+                    return this.RedistributionCycles - this.History.IndexOf(firstSighting);
+                }
+            }
 
             public List<int[]> History { get; } = new List<int[]>();
 
