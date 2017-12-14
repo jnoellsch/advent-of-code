@@ -7,23 +7,34 @@
     using System.Text.RegularExpressions;
     using AoC.Common;
 
-    public class Day7 : IPuzzle
+    public class Day7 : IPuzzle, IPuzzlePart2
     {
         public string[] StackInstructions = File.ReadAllLines("Day7/input.txt");
 
-        public object Answer()
+        public Day7()
         {
-            var disc = new DiscTower();
-            disc.Parse(this.StackInstructions);
+            this.Tower = new DiscTower();
+            this.Tower.Load(this.StackInstructions);
+        }
 
-            return disc.FindBottom().Name;
+        public DiscTower Tower { get; }
+
+        object IPuzzle.Answer()
+        {
+
+            return this.Tower.FindBottom().Name;
+        }
+
+        object IPuzzlePart2.Answer()
+        {
+            return this.Tower.FindBalanceWeight();
         }
 
         public class DiscTower
         {
             public List<Disc> Discs { get; } = new List<Disc>();
 
-            public void Parse(string[] stackInstructions)
+            public void Load(string[] stackInstructions)
             {
                 foreach (var instruc in stackInstructions)
                 {
@@ -53,6 +64,33 @@
 
                 throw new Exception("No bottom. :( Jim...c'mon, brah. Debug harder.");
             }
+
+            public int FindBalanceWeight()
+            {
+                var sumTracker = new Dictionary<string, int>();
+                var importantDiscs = this.Discs.Where(d => d.ParentNames.Any()).ToList();
+
+                // calculate the sums
+                foreach (var disc in importantDiscs)
+                {
+                    int totalWeight = disc.Weight;
+
+                    foreach (var pname in disc.ParentNames)
+                    {
+                        totalWeight += this.Discs.First(d => d.Name.Equals(pname, StringComparison.OrdinalIgnoreCase)).Weight;
+                    }
+
+                    sumTracker.Add(disc.Name, totalWeight);
+                }
+
+                // find the highest, lowest, and their difference
+                var lowest = sumTracker.OrderByDescending(x => x.Value).Last();
+                var highest = sumTracker.OrderByDescending(x => x.Value).First();
+                var weightDelta = highest.Value - lowest.Value;
+                var fatAssDisc = this.Discs.First(d => d.Name.Equals(highest.Key, StringComparison.OrdinalIgnoreCase));
+
+                return fatAssDisc.Weight - weightDelta;
+            }
         }
 
         public class Disc
@@ -73,12 +111,12 @@
                 string parentsRaw = groups["parents"].Value;
 
                 return new Disc()
-                       {
-                           Name = groups["name"].Value,
-                           Weight = Convert.ToInt32(groups["weight"].Value),
-                           ParentNames = !string.IsNullOrEmpty(parentsRaw) ? parentsRaw.Split(',').Select(x => x.Trim()) : Enumerable.Empty<string>(),
-                           RawInstruction = instruction
-                       };
+                {
+                    Name = groups["name"].Value,
+                    Weight = Convert.ToInt32(groups["weight"].Value),
+                    ParentNames = !string.IsNullOrEmpty(parentsRaw) ? parentsRaw.Split(',').Select(x => x.Trim()) : Enumerable.Empty<string>(),
+                    RawInstruction = instruction
+                };
             }
         }
 
