@@ -1,19 +1,28 @@
 ﻿namespace Aoc
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
     using System.Linq;
     using AoC.Common;
 
-    public class Day1 : IPuzzle
+    public class Day1 : IPuzzle, IPuzzlePart2
     {
-        public string[] Frequencies { get; set; } = File.ReadAllLines("Day1/input.txt");
+        public int[] Changes { get; set; } = File.ReadAllLines("Day1/input.txt").Select(f => Int32.Parse(f, NumberStyles.AllowLeadingSign)).ToArray();
 
-        public object Answer()
+        object IPuzzle.Answer()
         {
             var calibrator = new DeviceCalibrator();
-            calibrator.Fix(this.Frequencies);
+            calibrator.Fix(this.Changes);
+
+            return calibrator.Frequency;
+        }
+
+        object IPuzzlePart2.Answer()
+        {
+            var calibrator = new DoubleFrequencyDeviceCalibrator();
+            calibrator.Fix(this.Changes);
 
             return calibrator.Frequency;
         }
@@ -23,9 +32,47 @@
     {
         public int Frequency { get; set; } = 0;
 
-        public void Fix(string[] frequencies)
+        public virtual void Fix(int[] changes)
         {
-            this.Frequency = frequencies.Select(f => Int32.Parse(f, NumberStyles.AllowLeadingSign)).Sum();
+            this.Frequency = changes.Sum();
         }
+    }
+
+    public class DoubleFrequencyDeviceCalibrator : DeviceCalibrator
+    {
+        private readonly List<int> _frequencyHistory = new List<int>();
+
+        public override void Fix(int[] changes)
+        {
+            int rollingFrequency = 0;
+            int i = 0;
+
+            while (true)
+            {
+                rollingFrequency += changes[i];
+                
+                // search for dupes
+                if(this.NoDupesDetected(rollingFrequency))
+                {
+                    this.StoreHistory(rollingFrequency);
+                }
+                else
+                {
+                    this.Frequency = rollingFrequency;
+                    break;
+                }
+
+                // bump counter (for infinite looping)
+                i = i + 1;
+                if (i > changes.Length - 1)
+                {
+                    i = 0;
+                }
+            }
+        }
+
+        private void StoreHistory(int frequency) => this._frequencyHistory.Add(frequency);
+
+        private bool NoDupesDetected(int currentFrequency) => !this._frequencyHistory.Contains(currentFrequency);
     }
 }
