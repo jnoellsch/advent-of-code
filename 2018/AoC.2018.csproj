@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RootNamespace>Aoc</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Day1\input.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Day1\input.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\AoC.Common.csproj" />
+  </ItemGroup>
+
+</Project>
