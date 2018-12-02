@@ -19,11 +19,63 @@
 
         object IPuzzlePart2.Answer()
         {
-            return string.Empty;
+            var finder = new BoxPrototypeFinder();
+            finder.Evaluate(this.BoxIds);
+
+            return finder.CommonBoxId;
         }
     }
 
-    public class BoxTracker
+    internal class BoxPrototypeFinder
+    {
+        public string CommonBoxId { get; private set; }
+
+        public void Evaluate(string[] boxIds)
+        {
+            for (int index = 0; index < boxIds.Length - 1; index++)
+            {
+                string boxId = boxIds[index];
+
+                for (int offsetIndex = index + 1; offsetIndex < boxIds.Length - 1; offsetIndex++)
+                {
+                    string candidateBoxId = boxIds[offsetIndex];
+                    if (this.CheckForPrototype(boxId, candidateBoxId))
+                    {
+                        return;
+                    }
+                }
+            }
+        }
+
+        private bool CheckForPrototype(string boxId, string candidateBoxId)
+        {
+            for (int i = 0; i < boxId.Length - 1; i++)
+            {
+                var boxPivotChar = boxId[i];
+                var candidateBoxPivotChar = candidateBoxId[i];
+
+                if (boxPivotChar != candidateBoxPivotChar)
+                {
+                    var boxIdL = boxId.Substring(0, i);
+                    var boxIdR = boxId.Substring(i + 1);
+
+                    var candidateIdL = candidateBoxId.Substring(0, i);
+                    var candidateIdR = candidateBoxId.Substring(i + 1);
+
+                    bool bothSidesOfPivotMatch = boxIdL == candidateIdL && boxIdR == candidateIdR;
+                    if (bothSidesOfPivotMatch)
+                    {
+                        this.CommonBoxId = boxId.Replace(boxPivotChar.ToString(), string.Empty);
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+    }
+
+    internal class BoxTracker
     {
         public int Checksum { get; private set; }
 
