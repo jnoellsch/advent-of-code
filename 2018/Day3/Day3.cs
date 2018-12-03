@@ -14,14 +14,17 @@
         object IPuzzle.Answer()
         {
             var measurer = new FabricMeasurer();
-            measurer.Measure(this.Claims);
+            measurer.Plot(this.Claims);
 
             return measurer.OverlapArea;
         }
 
         object IPuzzlePart2.Answer()
         {
-            return string.Empty;
+            var measurer = new FabricMeasurer();
+            measurer.Plot(this.Claims);
+
+            return measurer.SoloClaim.Id;
         }
     }
 
@@ -34,7 +37,9 @@
 
         public object OverlapArea { get; set; }
 
-        public void Measure(IEnumerable<Claim> claims)
+        public Claim SoloClaim { get; set; }
+
+        public void Plot(IEnumerable<Claim> claims)
         {
             foreach (var claim in claims)
             {
@@ -42,6 +47,32 @@
             }
 
             this.OverlapArea = this.CalculateArea();
+            this.SoloClaim = this.FindSoloClaim(claims);
+        }
+
+        private Claim FindSoloClaim(IEnumerable<Claim> claims)
+        {
+            foreach (var claim in claims)
+            {
+                bool hasOverlap = false;
+
+                for (int i = claim.OffsetX; i < claim.OffsetX + claim.Width; i++)
+                for (int j = claim.OffsetY; j < claim.OffsetY + claim.Height; j++)
+                {
+                    if (this.Fabric[i, j] == "X")
+                    {
+                        hasOverlap = true;
+                        break;
+                    }
+                }
+
+                if (!hasOverlap)
+                {
+                    return claim;
+                }
+            }
+
+            throw new Exception("No overlap found. :'(");
         }
 
         private int CalculateArea()
@@ -49,13 +80,11 @@
             int area = 0;
 
             for (int i = 0; i < MaxWidth; i++)
+            for (int j = 0; j < MaxHeight; j++)
             {
-                for (int j = 0; j < MaxHeight; j++)
+                if (this.Fabric[i, j] == "X")
                 {
-                    if (this.Fabric[i, j] == "X")
-                    {
-                        area++;
-                    }
+                    area++;
                 }
             }
 
@@ -65,18 +94,16 @@
         private void MarkUpFabric(Claim claim)
         {
             for (int i = claim.OffsetX; i < claim.OffsetX + claim.Width; i++)
+            for (int j = claim.OffsetY; j < claim.OffsetY + claim.Height; j++)
             {
-                for (int j = claim.OffsetY; j < claim.OffsetY + claim.Height; j++)
+                string current = this.Fabric[i, j];
+                if (string.IsNullOrEmpty(current))
                 {
-                    string current = this.Fabric[i, j];
-                    if (string.IsNullOrEmpty(current))
-                    {
-                        this.Fabric[i, j] = "1";
-                    }
-                    else if (current == "1")
-                    {
-                        this.Fabric[i, j] = "X";
-                    }
+                    this.Fabric[i, j] = "1";
+                }
+                else if (current == "1")
+                {
+                    this.Fabric[i, j] = "X";
                 }
             }
         }
