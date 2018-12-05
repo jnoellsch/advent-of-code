@@ -119,7 +119,7 @@
             {
                 for (int i = 0; i < 60; i++)
                 {
-                    if (activity.SleepySleepy <= i && activity.WakeyWakey >= i)
+                    if (activity.SleepySleepy <= i && i < activity.WakeyWakey)
                     {
                         Console.Write("X");
                     }
@@ -140,7 +140,7 @@
 
                 foreach (var activity in guard.Activity)
                 {
-                    if (activity.SleepySleepy <= i && activity.WakeyWakey >= i)
+                    if (activity.SleepySleepy <= i && i < activity.WakeyWakey)
                     {
                         total += 1;
                     }
@@ -195,7 +195,7 @@
 
         public int WakeyWakey { get; set; }
 
-        public int NapTimeMinutes => this.WakeyWakey - this.SleepySleepy;
+        public int NapTimeMinutes => this.WakeyWakey - this.SleepySleepy - 1;
 
         public static GuardActivity Parse(string sleepIntel, string awakeIntel)
         {
