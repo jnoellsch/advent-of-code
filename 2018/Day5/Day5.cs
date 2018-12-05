@@ -12,9 +12,7 @@
         object IPuzzle.Answer()
         {
             var analyzer = new PolymerAnalyzer();
-            analyzer.Reduce(this.Polymers);
-
-            return analyzer.UnitsRemaining;
+            return analyzer.Reduce(this.Polymers);
         }
 
         object IPuzzlePart2.Answer()
@@ -31,7 +29,7 @@
             "Aa","Bb","Cc","Dd","Ee","Ff","Gg","Hh","Ii","Jj","Kk","Ll","Mm","Nn","Oo","Pp","Qq","Rr","Ss","Tt","Uu","Vv","Ww","Xx","Yy","Zz"
         };
 
-        public void Reduce(string polymer)
+        public int Reduce(string polymer)
         {
             bool wasReduced;
             var prevPolymer = polymer;
@@ -45,9 +43,7 @@
             }
             while (wasReduced);
 
-            this.UnitsRemaining = polymer.Length;
+            return polymer.Length;
         }
-
-        public int UnitsRemaining { get; set; }
     }
 }
