@@ -9,7 +9,7 @@
 
     public class Day6 : IPuzzle, IPuzzlePart2
     {
-        private IList<Point> Coordinates { get; } = File.ReadAllLines("Day5/input.txt")
+        private IList<Point> Coordinates { get; } = File.ReadAllLines("Day6/input.txt")
             .Select(_ => _.Split(','))
             .Select(_ => new Point(Convert.ToInt32(_[0]), Convert.ToInt32(_[1])))
             .ToList();
