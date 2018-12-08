@@ -1,5 +1,6 @@
 ﻿namespace Aoc
 {
+    using System;
     using AoC.Common;
     using System.IO;
     using System.Linq;
@@ -19,7 +20,10 @@
 
         object IPuzzlePart2.Answer()
         {
-            return string.Empty;
+            var checker = new GoofyRulesLicenseFileChecker();
+            checker.Process(this.Input);
+
+            return checker.MetadataSum;
         }
     }
 
@@ -63,7 +67,7 @@
 
         public int MetadataSum => this.SumTreeMetadata(this.Root);
 
-        private int SumTreeMetadata(Node node)
+        protected virtual int SumTreeMetadata(Node node)
         {
             if (node.NoChildren)
             {
@@ -71,6 +75,32 @@
             }
 
             return node.Children.Aggregate(node.Sum, (rollingSum, childNode) => rollingSum + this.SumTreeMetadata(childNode));
+        }
+    }
+
+    internal class GoofyRulesLicenseFileChecker : LicenseFileChecker
+    {
+        protected override int SumTreeMetadata(Node node)
+        {
+            if (node.NoChildren)
+            {
+                return node.Sum;
+            }
+
+            return node.MetadataValues
+                .Where(WithinChildrenBounds())
+                .Select(ToIndex())
+                .Aggregate(0, (rollingSum, i) => rollingSum + this.SumTreeMetadata(node.Children[i]));
+
+            Func<int, int> ToIndex()
+            {
+                return mv => mv - 1;
+            }
+
+            Func<int, bool> WithinChildrenBounds()
+            {
+                return mv => mv <= node.ChildQuantity;
+            }
         }
     }
 
@@ -85,5 +115,7 @@
         public bool HasChildren => this.Children.Any();
 
         public bool NoChildren => !this.HasChildren;
+
+        public int ChildQuantity => this.Children.Count;
     }
 }
