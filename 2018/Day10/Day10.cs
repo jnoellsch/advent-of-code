@@ -2,48 +2,41 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Drawing;
     using System.IO;
     using System.Linq;
+    using System.Text;
     using System.Text.RegularExpressions;
-    using System.Threading;
     using AoC.Common;
 
     public class Day10 : IPuzzle, IPuzzlePart2
     {
-        private IList<Star> Stars { get; } = File.ReadAllLines("Day10/sampleinput.txt").Select(Star.Parse).ToList();
+        private IList<Star> Stars { get; } = File.ReadAllLines("Day10/input.txt").Select(Star.Parse).ToList();
 
-        object IPuzzlePart2.Answer()
+        object IPuzzle.Answer()
         {
             var gazer = new StarGazer(this.Stars);
-            gazer.SkipTo(3);
             gazer.Move();
 
             return "...use eyeballs";
         }
 
-        object IPuzzle.Answer()
+        object IPuzzlePart2.Answer()
         {
-            return string.Empty;
+            return "N/A";
         }
     }
 
     internal class StarGazer
     {
+        private const int SkyViewportHeight = 10;
+
         public IList<Star> Stars { get; }
 
         public int Count { get; set; }
 
-        public int BoundX { get; set; }
-
-        public int BoundY { get; set; }
-
         public StarGazer(IList<Star> stars)
         {
             this.Stars = stars;
-            this.BoundY = this.Stars.Max(_ => Math.Abs(_.Y));
-            this.BoundX = this.Stars.Max(_ => Math.Abs(_.X));
         }
 
         public void Move()
@@ -51,31 +44,56 @@
             while (true)
             {
                 this.Shift();
-                this.Print();
-                Console.ReadKey();
+
+                if (this.HaveTheStarsAligned())
+                {
+                    this.Print();
+                    break;
+                }
             }
+        }
+
+
+        private bool HaveTheStarsAligned()
+        {
+            int maxY = this.Stars.Max(_ => _.Y);
+            int minY = this.Stars.Min(_ => _.Y);
+
+            return (maxY - minY + 1) <= SkyViewportHeight;
         }
 
         private void Print()
         {
-            Console.WriteLine($"#{this.Count}:");
+            var msg = new StringBuilder();
 
-            for (int y = 0; y < this.BoundY; y++)
+            int startY = this.Stars.Min(_ => _.Y);
+            int startX = this.Stars.Min(_ => _.X);
+            int endY = this.Stars.Max(_ => _.Y);
+            int endX = this.Stars.Max(_ => _.X);
+
+            for (int y = startY; y <= endY; y++)
             {
-                for (int x = 0; x < this.BoundX; x++)
+                for (int x = startX; x <= endX; x++)
                 {
-                    if (this.Stars.Any(s => s.X == x && s.Y == y))
+                    if (this.Stars.Any(s => s.Y == y && s.X == x))
                     {
-                        Console.Write("#");
+                        msg.Append("#");
                     }
                     else
                     {
-                        Console.Write(" ");
+                        msg.Append(" ");
                     }
                 }
 
-                Console.WriteLine();
+                msg.Append(Environment.NewLine);
             }
+
+            // display
+            Console.WriteLine();
+            Console.Write(msg.ToString().Trim());
+            Console.WriteLine();
+            Console.Write($"{this.Count} seconds");
+            Console.WriteLine();
         }
 
         private void Shift()
@@ -87,25 +105,14 @@
 
             this.Count++;
         }
-
-        public void SkipTo(int count)
-        {
-            for (int i = 0; i < count; i++)
-            {
-                this.Stars.ForEach(_ => _.Move());
-            }
-
-            this.Count = count;
-            this.Print();
-            Console.ReadKey();
-        }
     }
 
     internal class Star
     {
         public int Y { get; private set; }
+
         public int X { get; private set; }
-        
+
         public int VelocityX { get; private set; }
 
         public int VelocityY { get; private set; }
@@ -115,7 +122,6 @@
             this.X += this.VelocityX;
             this.Y += this.VelocityY;
         }
-
         public static Star Parse(string input)
         {
             var regex = new Regex(@"position=<(?<px>.*?), (?<py>.*?)> velocity=<(?<vx>.*?), (?<vy>.*?)>");
