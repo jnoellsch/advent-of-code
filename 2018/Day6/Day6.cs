@@ -44,11 +44,11 @@
 
             // populate matrix
             for (int y = 0; y < this.Rows; y++)
-                for (int x = 0; x < this.Columns; x++)
-                {
-                    var p = new Point(x, y);
-                    this.PointMatrix[x, y] = this.FindClosest(p, coordinates);
-                }
+            for (int x = 0; x < this.Columns; x++)
+            {
+                var p = new Point(x, y);
+                this.PointMatrix[x, y] = this.FindClosest(p, coordinates);
+            }
 
             // remove coordinates at the fringes (i.e. infinite)
             int startX = coordinates.Min(_ => _.Point.X);
@@ -62,7 +62,6 @@
             var nonInfiniteCoordinates = coordinates.Except(infiniteCoordinates).ToList();
 
             var sums = new Dictionary<string, int>();
-            sums.Add(".", 0);
             nonInfiniteCoordinates.ForEach(_ => sums.Add(_.Id, 0));
 
             // sum

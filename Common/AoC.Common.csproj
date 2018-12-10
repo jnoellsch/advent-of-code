@@ -48,6 +48,7 @@
     <Compile Include="IPuzzle.cs" />
     <Compile Include="IPuzzlePart2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

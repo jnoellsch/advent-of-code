@@ -1,5 +1,6 @@
 ﻿namespace AoC.Common
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -14,6 +15,14 @@
             {
                 yield return enumerators.Select(e => e.Current);
                 enumerators = enumerators.Where(e => e.MoveNext());
+            }
+        }
+
+        public static void ForEach<T>(this IEnumerable<T> @this, Action<T> action)
+        {
+            foreach (T item in @this)
+            {
+                action(item);
             }
         }
     }

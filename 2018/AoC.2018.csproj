@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Day10\input.txt" />
+    <None Remove="Day10\sampleinput.txt" />
     <None Remove="Day1\input.txt" />
     <None Remove="Day2\input.txt" />
     <None Remove="Day3\input.txt" />
@@ -19,6 +21,32 @@
     <None Remove="Day7\sampleinput.txt" />
     <None Remove="Day8\input.txt" />
     <None Remove="Day8\sampleinput.txt" />
+    <None Remove="Day9\input.txt" />
+    <None Remove="Day9\sampleinput.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Day10\sampleinput.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Day10\input.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Day9\sampleinput.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Day9\input.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
