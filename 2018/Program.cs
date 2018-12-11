@@ -24,10 +24,10 @@ namespace Aoc
             ////IPuzzlePart2 part2 = new Day7();
             ////IPuzzle part1 = new Day8();
             ////IPuzzlePart2 part2 = new Day8();
-            ////IPuzzle part1 = new Day9();
-            ////IPuzzlePart2 part2 = new Day9();
-            IPuzzle part1 = new Day10();
-            IPuzzlePart2 part2 = new Day10();
+            IPuzzle part1 = new Day9();
+            IPuzzlePart2 part2 = new Day9();
+            ////IPuzzle part1 = new Day10();
+            ////IPuzzlePart2 part2 = new Day10();
 
             Console.WriteLine("Part 1: " + part1.Answer());
             Console.WriteLine("Part 2: " + part2.Answer());

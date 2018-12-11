@@ -23,5 +23,9 @@
 
             return Convert.ToChar(number + 65).ToString();
         }
+
+        public static bool IsOdd(this int number) => !IsEven(number);
+
+        public static bool IsEven(this int number) => number % 2 == 0;
     }
 }
