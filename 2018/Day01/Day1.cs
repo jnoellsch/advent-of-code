@@ -9,7 +9,7 @@
 
     public class Day1 : IPuzzle, IPuzzlePart2
     {
-        public int[] Changes { get; set; } = File.ReadAllLines("Day1/input.txt").Select(f => Int32.Parse(f, NumberStyles.AllowLeadingSign)).ToArray();
+        public int[] Changes { get; set; } = File.ReadAllLines("Day01/input.txt").Select(f => Int32.Parse(f, NumberStyles.AllowLeadingSign)).ToArray();
 
         object IPuzzle.Answer()
         {

@@ -8,7 +8,7 @@
 
     public class Day8 : IPuzzle, IPuzzlePart2
     {
-        private IList<int> Input { get; } = File.ReadAllText("Day8/input.txt").Split(' ').Select(int.Parse).ToList();
+        private IList<int> Input { get; } = File.ReadAllText("Day08/input.txt").Split(' ').Select(int.Parse).ToList();
 
         object IPuzzle.Answer()
         {

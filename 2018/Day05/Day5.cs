@@ -8,7 +8,7 @@
 
     public class Day5 : IPuzzle, IPuzzlePart2
     {
-        private string Polymers { get; } = File.ReadAllText("Day5/input.txt");
+        private string Polymers { get; } = File.ReadAllText("Day05/input.txt");
 
         object IPuzzle.Answer()
         {

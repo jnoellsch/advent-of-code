@@ -7,7 +7,7 @@
 
     public class Day2 : IPuzzle, IPuzzlePart2
     {
-        public string[] BoxIds { get; set; } = File.ReadAllLines("Day2/input.txt");
+        public string[] BoxIds { get; set; } = File.ReadAllLines("Day02/input.txt");
 
         object IPuzzle.Answer()
         {

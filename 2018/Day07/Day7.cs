@@ -10,7 +10,7 @@
 
     public class Day7 : IPuzzle, IPuzzlePart2
     {
-        private IList<StepInstruction> Instructions = File.ReadAllLines("Day7/sampleinput.txt").Select(StepInstruction.Parse).ToList();
+        private IList<StepInstruction> Instructions = File.ReadAllLines("Day07/sampleinput.txt").Select(StepInstruction.Parse).ToList();
 
         object IPuzzle.Answer()
         {

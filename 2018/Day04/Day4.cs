@@ -10,7 +10,7 @@
 
     public class Day4 : IPuzzle, IPuzzlePart2
     {
-        private string[] ActivityLog { get; } = File.ReadAllLines("Day4/input.txt").OrderBy(_ => _).ToArray();
+        private string[] ActivityLog { get; } = File.ReadAllLines("Day04/input.txt").OrderBy(_ => _).ToArray();
 
         object IPuzzle.Answer()
         {

@@ -9,7 +9,7 @@
 
     public class Day6 : IPuzzle, IPuzzlePart2
     {
-        private IList<Coordinate> Coordinates { get; } = File.ReadAllLines("Day6/input.txt").Select((_, i) => Coordinate.Parse(i, _)).ToList();
+        private IList<Coordinate> Coordinates { get; } = File.ReadAllLines("Day06/input.txt").Select((_, i) => Coordinate.Parse(i, _)).ToList();
 
         object IPuzzle.Answer()
         {

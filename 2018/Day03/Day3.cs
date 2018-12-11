@@ -9,7 +9,7 @@
 
     public class Day3 : IPuzzle, IPuzzlePart2
     {
-        private IEnumerable<Claim> Claims { get; } = File.ReadAllLines("Day3/input.txt").Select(Claim.Parse);
+        private IEnumerable<Claim> Claims { get; } = File.ReadAllLines("Day03/input.txt").Select(Claim.Parse);
 
         object IPuzzle.Answer()
         {
