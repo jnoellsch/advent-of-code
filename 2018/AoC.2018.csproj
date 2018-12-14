@@ -23,6 +23,20 @@
     <None Remove="Day08\sampleinput.txt" />
     <None Remove="Day09\input.txt" />
     <None Remove="Day09\sampleinput.txt" />
+    <None Remove="Day12\input.txt" />
+    <None Remove="Day12\sampleinput.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Day12\sampleinput.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Day12\input.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
