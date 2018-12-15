@@ -14,23 +14,39 @@
 
         private string SampleInitialState = "#..#.#..##......###...###";
 
-        private IList<GrowthPattern> Patterns = File.ReadAllLines("Day12/input.txt").Select(GrowthPattern.Parse).ToList();
+        private IList<GrowthPattern> Patterns = File.ReadAllLines("Day12/input.txt").Select(GrowthPattern.Parse).Where(_ => _.Outcome == "#").ToList();
 
         private IList<GrowthPattern> SamplePatterns = File.ReadAllLines("Day12/sampleinput.txt").Select(GrowthPattern.Parse).ToList();
 
         object IPuzzle.Answer()
         {
-            var gt = new GreenThumb(this.SampleInitialState);
-            gt.WithPatterns(this.SamplePatterns);
-            gt.GrowCycles(3);
-            gt.DebugOutcomes();
+            var gt = new GreenThumb(this.InitialState);
+            gt.WithPatterns(this.Patterns);
+            gt.GrowCycles(20);
 
-            return gt.PlantCount;
+            return gt.PlantSumValue;
         }
 
         object IPuzzlePart2.Answer()
         {
-            return string.Empty;
+            var gt = new GreenThumb(this.InitialState);
+            gt.WithPatterns(this.Patterns);
+            gt.GrowCycles(20);
+            gt.DebugFinalOutcome();
+            gt.GrowCycles(80);
+            gt.DebugFinalOutcome();
+            gt.GrowCycles(100);
+            gt.DebugFinalOutcome();
+            gt.GrowCycles(1);
+            gt.DebugFinalOutcome();
+            gt.GrowCycles(1);
+            gt.DebugFinalOutcome();
+            gt.GrowCycles(1);
+            gt.DebugFinalOutcome();
+            gt.GrowCycles(97);
+            gt.DebugFinalOutcome();
+
+            return gt.PlantSumValue;
         }
     }
 
@@ -42,6 +58,8 @@
 
         public IList<string> Outcomes = new List<string>();
 
+        public int NegativeDelta { get; private set; }
+
         public GreenThumb(string initialState)
         {
             this.InitialState = initialState;
@@ -50,6 +68,9 @@
         }
 
         public string InitialState { get; set; }
+
+        public int PlantSumValue;
+
 
         public void WithPatterns(IList<GrowthPattern> patterns)
         {
@@ -60,51 +81,103 @@
         {
             for (int cycle = 0; cycle < numOfCycles; cycle++)
             {
-                Console.WriteLine($"{cycle + 1} start length (State) = {this.State.Length}");
-
                 var sb = new StringBuilder();
 
                 for (int i = 0; i < this.State.Length; i++)
                 {
-                    var chunk = this.GenerateChunk(i);
-                    var patternMath = this.Patterns.FirstOrDefault(_ => _.Pattern == chunk);
-                    if (patternMath != null)
-                    {
-                        sb.Append(patternMath.Outcome);
-                    }
-                    else
-                    {
-                        sb.Append(".");
-                    }
+                    var wasFound = this.Patterns.Any(_ => _.Pattern == this.Chunk(i));
+                    sb.Append(wasFound ? "#" : ".");
                 }
 
-                Console.WriteLine($"{cycle + 1} end length (sb) = {sb.Length}");
+                this.PrependFix(sb);
+                this.AppendFix(sb);
 
                 this.State = sb.ToString();
                 this.Outcomes.Add(this.State);
             }
+
+            this.PlantSumValue = this.CalculatePlantSum();
         }
 
-        private string GenerateChunk(int i)
+        private int CalculatePlantSum()
         {
-            // if i = 0, add ".."
-            // if i = 1, add "."
-            // if i = len - 2, add "."
-            // if i = len - 1, add ".."
-            return new string(this.State.Skip(i).Take(5).ToArray());
+            string plantState = this.State;
+            int sum = 0;
+
+            for (int whatToAdd = this.NegativeDelta; whatToAdd < this.State.Length + this.NegativeDelta; whatToAdd++)
+            {
+                if (plantState[0].Equals('#'))
+                {
+                    sum += whatToAdd;
+                }
+
+                plantState = plantState.Remove(0, 1);
+            }
+
+            return sum;
         }
 
-        public int PlantCount => this.State.Where(_ => _ == '#').Count();
+        private void PrependFix(StringBuilder sb)
+        {
+            string pattern1 = "..." + new string(this.State.Take(2).ToArray());
+            if (this.Patterns.Any(_ => _.Pattern == pattern1))
+            {
+                sb.Insert(0, "#");
+                this.NegativeDelta -= 1;
+            }
+
+            string pattern2 = "...." + new string(this.State.Take(1).ToArray());
+            if (this.Patterns.Any(_ => _.Pattern == pattern2))
+            {
+                sb.Insert(0, "#.");
+                this.NegativeDelta -= 2;
+            }
+        }
+
+        private void AppendFix(StringBuilder sb)
+        {
+            string pattern1 = new string(this.State.Skip(this.State.Length - 2).Take(2).ToArray()) + "...";
+            if (this.Patterns.Any(_ => _.Pattern == pattern1))
+            {
+                sb.Append("#");
+            }
+            string pattern2 = new string(this.State.Skip(this.State.Length - 1).Take(1).ToArray()) + "....";
+            if (this.Patterns.Any(_ => _.Pattern == pattern2))
+            {
+                sb.Append(".#");
+            }
+        }
+
+        private string Chunk(int i)
+        {
+            if (i == 0)
+                return ".." + new string(this.State.Take(3).ToArray());
+            else if (i == 1)
+                return "." + new string(this.State.Take(4).ToArray());
+            else if (i == this.State.Length - 2)
+                return new string(this.State.Skip(i - 2).Take(4).ToArray()) + ".";
+            else if (i == this.State.Length - 1)
+                return new string(this.State.Skip(i - 2).Take(3).ToArray()) + "..";
+            else
+                return new string(this.State.Skip(i - 2).Take(5).ToArray());
+        }
 
         public void DebugOutcomes()
         {
-            Console.WriteLine("--:            ");
-            Console.WriteLine("--:           0");
+            Console.WriteLine("--: ");
+            Console.WriteLine("--: 0");
 
             for (var i = 0; i < this.Outcomes.Count; i++)
             {
                 Console.WriteLine($"{i:D2}: {this.Outcomes[i]}");
             }
+
+            Console.WriteLine($"Negative delta: {this.NegativeDelta}");
+        }
+
+        public void DebugFinalOutcome()
+        {
+            Console.WriteLine($"{this.Outcomes.Count - 1}: {this.PlantSumValue}");
         }
     }
 
