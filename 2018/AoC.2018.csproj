@@ -133,4 +133,8 @@
     <ProjectReference Include="..\Common\AoC.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Day13\" />
+  </ItemGroup>
+
 </Project>
