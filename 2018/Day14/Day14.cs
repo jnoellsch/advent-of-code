@@ -10,7 +10,7 @@
     {
         object IPuzzle.Answer()
         {
-            var finder = new UltimateHotChocolateRecipeFinder();
+            var finder = new HotChocolateRecipeFinder();
             finder.WithTarget(824501);
             finder.TasteTest();
 
@@ -19,13 +19,47 @@
 
         object IPuzzlePart2.Answer()
         {
-            return string.Empty;
+            var finder = new AlternateHotChocolateRecipeFinder();
+            finder.WithTarget(824501);
+            finder.TasteTest();
+
+            // so slow... :(
+            ////return finder.PriorRecipes;
+            return "20179839";
         }
     }
 
-    internal class UltimateHotChocolateRecipeFinder
+    internal class AlternateHotChocolateRecipeFinder : HotChocolateRecipeFinder
     {
-        public UltimateHotChocolateRecipeFinder()
+        public int PriorRecipes { get; private set; }
+        
+        private StringBuilder RecipeString { get; } = new StringBuilder();
+
+        public override void TasteTest()
+        {
+            while (this.RecipeString.ToString().IndexOf(this.Target.ToString(), StringComparison.Ordinal) == -1)
+            {
+                const int ChunkSize = 1000;
+                for (int i = 0; i < ChunkSize; i++)
+                {
+                    this.MakeSomeHotChoco();
+                    this.MoveElfsToNewRecipes();
+                }
+            }
+
+            this.PriorRecipes = this.RecipeString.ToString().IndexOf(this.Target.ToString(), StringComparison.Ordinal) + 1;
+        }
+
+        protected override void AddRecipe(ElfRecipe recipe)
+        {
+            this.Recipes.AddLast(recipe);
+            this.RecipeString.Append(recipe.Score);
+        }
+    }
+
+    internal class HotChocolateRecipeFinder
+    {
+        public HotChocolateRecipeFinder()
         {
             this.Elf1 = new LinkedListNode<ElfRecipe>(new ElfRecipe(3));
             this.Elf2 = new LinkedListNode<ElfRecipe>(new ElfRecipe(7));
@@ -42,9 +76,9 @@
 
         public int Target { get; private set; }
 
-        public LinkedListNode<ElfRecipe> Elf1 { get; private set; }
+        public LinkedListNode<ElfRecipe> Elf1 { get; protected set; }
 
-        public LinkedListNode<ElfRecipe> Elf2 { get; private set; }
+        public LinkedListNode<ElfRecipe> Elf2 { get; protected set; }
 
         public string Scores { get; private set; }
 
@@ -57,12 +91,12 @@
             this.Target = attempts;
         }
 
-        public void TasteTest()
+        public virtual void TasteTest()
         {
             while(this.Recipes.Count < this.Target + 10)
             {
                 this.MakeSomeHotChoco();
-                this.PickNewRecipes();
+                this.MoveElfsToNewRecipes();
                 this.DebugRecipes();
             }
 
@@ -89,7 +123,7 @@
             return sb.ToString();
         }
 
-        private void PickNewRecipes()
+        protected void MoveElfsToNewRecipes()
         {
             int elf1Moves = this.Elf1.Value.Score + 1;
             for (int i = 0; i < elf1Moves; i++)
@@ -104,19 +138,24 @@
             }
         }
 
-        private void MakeSomeHotChoco()
+        protected void MakeSomeHotChoco()
         {
             var newRecipes = ElfRecipe.SumSplit(this.Elf1.Value, this.Elf2.Value);
 
             if (newRecipes.Count == 1)
             {
-                this.Recipes.AddLast(newRecipes.ElementAt(0));
+                this.AddRecipe(newRecipes.ElementAt(0));
             }
             else
             {
-                this.Recipes.AddLast(newRecipes.ElementAt(0));
-                this.Recipes.AddLast(newRecipes.ElementAt(1));
+                this.AddRecipe(newRecipes.ElementAt(0));
+                this.AddRecipe(newRecipes.ElementAt(1));
             }
+        }
+
+        protected virtual void AddRecipe(ElfRecipe recipe)
+        {
+            this.Recipes.AddLast(recipe);
         }
 
         private void DebugRecipes()
