@@ -2,7 +2,7 @@
 {
     using AoC.Common;
 
-    public class Day3 : IPuzzle, IPuzzlePart2
+    internal class Day3 : IPuzzle, IPuzzlePart2
     {
         private IEnumerable<string> Rucksacks = File.ReadAllLines("Day03/input.txt");
 

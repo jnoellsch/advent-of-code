@@ -2,7 +2,7 @@
 {
     using AoC.Common;
 
-    public class Day2 : IPuzzle, IPuzzlePart2
+    internal class Day2 : IPuzzle, IPuzzlePart2
     {
         object IPuzzle.Answer()
         {
@@ -19,9 +19,9 @@
         }
     }
 
-    public class RockPaperScissorsScoring
+    internal class RockPaperScissorsScoring
     {
-        internal int CalculateScore(IEnumerable<GameRound> strategyGuideItems)
+        public int CalculateScore(IEnumerable<GameRound> strategyGuideItems)
         {
             return strategyGuideItems.Select(sgi => sgi.GetScore()).Sum();
         }

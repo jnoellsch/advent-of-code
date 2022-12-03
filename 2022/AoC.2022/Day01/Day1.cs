@@ -2,7 +2,7 @@
 {
     using AoC.Common;
 
-    public class Day1 : IPuzzle, IPuzzlePart2
+    internal class Day1 : IPuzzle, IPuzzlePart2
     {
         private IEnumerable<string> CalorieItems { get; } = File.ReadAllLines("Day01/input.txt");
 
@@ -19,7 +19,7 @@
         }
     }
 
-    public class CalorieCounter
+    internal class CalorieCounter
     {
         public IList<int> Sums { get; set; } = new List<int>();
 
@@ -49,7 +49,7 @@
         }
     }
 
-    public class TopThreeCalorieCounter : CalorieCounter
+    internal class TopThreeCalorieCounter : CalorieCounter
     {
         public override int FindMax(IEnumerable<string> calorieItems)
         {
