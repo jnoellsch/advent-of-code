@@ -86,9 +86,9 @@
         protected const char OP_PAPER = 'B';
         protected const char OP_SCISSORS = 'C';
 
-        protected const char ME_ROCK = 'X'; // 1 for rock
-        protected const char ME_PAPER = 'Y'; // 2 for paper
-        protected const char ME_SCISSORS = 'Z'; // 3 for scissors
+        protected const char ME_ROCK = 'X';
+        protected const char ME_PAPER = 'Y';
+        protected const char ME_SCISSORS = 'Z';
 
         protected const int WIN = 6;
         protected const int DRAW = 3;
@@ -111,16 +111,16 @@
         {
             // draw
             if ((this.Op == OP_ROCK && ME_ROCK == this.Me) ||
-               (this.Op == OP_PAPER && ME_PAPER == this.Me) ||
-               (this.Op == OP_SCISSORS && ME_SCISSORS == this.Me))
+                (this.Op == OP_PAPER && ME_PAPER == this.Me) ||
+                (this.Op == OP_SCISSORS && ME_SCISSORS == this.Me))
             {
                 return DRAW + this.MyPoints();
             }
 
             // loss
             if ((this.Op == OP_ROCK && ME_SCISSORS == this.Me) ||
-               (this.Op == OP_PAPER && ME_ROCK == this.Me) ||
-               (this.Op == OP_SCISSORS && ME_PAPER == this.Me))
+                (this.Op == OP_PAPER && ME_ROCK == this.Me) ||
+                (this.Op == OP_SCISSORS && ME_PAPER == this.Me))
             {
                 return LOSS + this.MyPoints();
             }
