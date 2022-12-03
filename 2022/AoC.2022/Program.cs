@@ -1,6 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using AoC;
+﻿using AoC;
 using AoC.Common;
 
 ////IPuzzle part1 = new Day1();
